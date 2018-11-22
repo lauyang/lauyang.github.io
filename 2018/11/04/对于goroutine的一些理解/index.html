@@ -166,7 +166,7 @@
     </div>
     <div class="article-content">
       <div class="markdown-body">
-        <h3 id="goroutine的实现"><a href="#goroutine的实现" class="headerlink" title="goroutine的实现"></a>goroutine的实现</h3><p>goroutine 就是 Go语言提供的一种用户态线程，当然这种用户态线程是跑在内核级线程之上的。当我们创建了很多的 goroutine，并且它们都是跑在同一个内核线程之上的时候，就需要一个调度器来维护这些 goroutine，确保所有的 goroutine 都使用 cpu，并且是尽可能公平的使用 cpu 资源。<br>地鼠(gopher)用小车运着一堆待加工的砖。M 就可以看作图中的地鼠，P 就是小车，G 就是小车里装的砖。如果 G 太多了，需要创建更多个 M 去干活。没有 P，M 是不能运砖的。一个 M 坏了，runtime 将G 放到仓库中(全局队列中),再找新的 M 去运砖。  </p>
+        <p></p>
 <h3 id="goroutine-和线程的区别"><a href="#goroutine-和线程的区别" class="headerlink" title="goroutine 和线程的区别"></a>goroutine 和线程的区别</h3><ol>
 <li>内存占用：<br>2KB VS 1M，创建多了，栈溢出 vs OutOfMemory，为了防止栈溢出，runtime 栈分裂，创建一个原先2倍的栈空间。<br>v1.3之前分段栈：优势是可以按需增长，空间利用率比较高，但回收的时候for循环反复执行栈收缩有性能问题。<br>v1.3连续栈：空间连续，分配两倍，不会反复执行栈收缩。</li>
 <li>创建和销毁的开销：<br>goroutine 有自己的 runtime 运行时处理，不需要人工处理；线程从 os 请求资源，之后再释放，即使是线程池，开销也较大。</li>
@@ -176,7 +176,6 @@
 <h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><blockquote>
 <p><a href="https://www.zhihu.com/question/20862617/answer/131341519" target="_blank" rel="noopener">https://www.zhihu.com/question/20862617/answer/131341519</a><br><a href="https://zhuanlan.zhihu.com/p/28381197" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/28381197</a></p>
 </blockquote>
-
       </div>
     </div>
 <!--
