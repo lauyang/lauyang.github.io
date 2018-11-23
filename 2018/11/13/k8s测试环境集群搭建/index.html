@@ -166,7 +166,13 @@
     </div>
     <div class="article-content">
       <div class="markdown-body">
-        <ol start="2">
+        <p></p>
+
+<h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p><em>说明：准备搭建1主(master)3从(slave)的集群环境</em>  </p>
+<ol>
+<li><p>先设置master节点和所有slave节点的主机名</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>master上执行</span><br><span class="line">hostnamectl --static set-hostname  k8s-master</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>slave上执行</span><br><span class="line">hostnamectl --static set-hostname  k8s-node-1</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>修改master和slave上的hosts</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>在master和slave的/etc/hosts文件中均加入以下内容</span><br><span class="line">vim /etc/hosts</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>文件内容如下</span><br><span class="line">10.104.132.1   k8s-master</span><br><span class="line">10.104.132.1   etcd</span><br><span class="line">10.104.132.1   registry</span><br><span class="line">10.104.132.2   k8s-node-1</span><br><span class="line">10.104.132.3   k8s-node-2</span><br><span class="line">10.104.132.4   k8s-node-3</span><br></pre></td></tr></table></figure>
 </li>
