@@ -1,6 +1,173 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> nsq的使用 · 刘洋的博客</title><meta name="description" content="nsq的使用 - 刘洋@liuyang"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico?v=2018"><link rel="stylesheet" href="/css/style.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="刘洋的博客"></head><body><div class="wrap"><header><h1 class="title">Jeremy's Blog</h1><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/" target="_self">主页</a></li><li class="nav-list-item"><a class="nav-list-link" href="/archives/" target="_self">归档</a></li><li class="nav-list-item"><a class="nav-list-link" href="http://jeremyfan.name" target="_blank">关于</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">nsq的使用</h1><div class="post-info">Nov 5, 2018</div><div class="post-content"><blockquote>
-<p>golang 中nsq的使用<br><a id="more"></a></p>
-</blockquote>
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="刘洋, lauy0911@gmail.com">
+  
+  
+  
+  <title>nsq的使用 | 刘洋的博客</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,学习,">
+  
+
+  
+
+  
+    <link rel="alternate" href="/atom.xml" title="刘洋的博客" type="application/atom+xml">
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  
+
+  <link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/icon/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+  <script src="/js/util.js"></script>
+<script src="/js/valine.min.js"></script>
+  
+  <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+
+</head>
+
+
+  <body>
+
+    
+
+    <div id="app">
+
+      <div class="header-wrap">
+  <header>
+    <div class="site-brand">
+      <div class="site-title">
+        <a href="/">刘洋的博客</a>
+      </div>
+    </div>
+    <nav class="site-navigation">
+      <ul class="nav-menu">
+      
+        <li class="nav-item" data-path="/">
+          
+            <a href="/">主页</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          
+            <a href="/archives/">归档</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          
+            <a href="/categories/">分类</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          
+            <a href="/tags/">标签</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          
+            <a href="/about/">关于</a>
+          
+        </li>
+      
+      </ul>
+    </nav>
+    <i class="iconfont icon-menu"></i>
+  </header>
+</div>
+
+<script>
+  let links = document.querySelectorAll('.nav-item');
+  for(let link of links){
+    let childrenLink = link.querySelector('ul');
+    link.addEventListener('mouseenter', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown active";
+      }
+    })
+    link.addEventListener('mouseleave', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown";
+      }
+    })
+  }
+  let rootRealPath = getRealPath(window.location.pathname, true);
+  for(let link of links) {
+    let linkPath = link.getAttribute("data-path");
+    if(linkPath && getRealPath(linkPath, true) === rootRealPath) {
+      link.className = "nav-item hover";
+    }
+  }
+
+  let iconMenu = document.querySelector("i.iconfont.icon-menu"),
+    iconMenuClicked = false;
+  let navDOM = document.querySelector("nav.site-navigation");
+  iconMenu.addEventListener("click", () => {
+    iconMenuClicked 
+      ? navDOM.className = "site-navigation active"
+      : navDOM.className = "site-navigation";
+    iconMenuClicked = !iconMenuClicked;
+  })
+</script>
+
+      
+
+
+
+
+
+
+
+
+<div class="container">
+
+  
+<div>
+  <div class="post">
+    <h1 class="article-title">
+      <span>nsq的使用</span>
+    </h1>
+    <div class="article-top-meta">
+      <span>
+        发布 : 
+        2018-11-05
+      </span>
+      <span>
+        分类 : 
+          
+            <a href="/categories/学习/">
+              学习
+            </a>
+          
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="nsq的使用"></span>
+      </span>
+    </div>
+    <div class="article-content">
+      <div class="markdown-body">
+        <p></p>
+
 <h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a href="https://nsq.io/deployment/installing.html" target="_blank" rel="noopener">nsq package</a><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 下载</span><br><span class="line">wget https://s3.amazonaws.com/bitly-downloads/nsq/nsq-1.1.0.linux-amd64.go1.10.3.tar.gz</span><br><span class="line">// 解压到/usr/local目录  </span><br><span class="line">tar -zxvf nsq-1.1.0.linux-amd64.go1.10.3.tar.gz -C /usr/local/ </span><br><span class="line">cd /usr/local </span><br><span class="line">// 改名  </span><br><span class="line">mv nsq-1.1.0.linux-amd64.go1.10.3/ nsq-1.1.0</span><br></pre></td></tr></table></figure></p>
 <h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p><code>vim /usr/lib/systemd/system/nsqlookupd.service</code><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=nsqlookup daemon Service</span><br><span class="line">After=network.target remote-fs.target nss-lookup.target</span><br><span class="line">[Service]</span><br><span class="line"><span class="meta">#</span>Type=</span><br><span class="line">PrivateTmp=yes</span><br><span class="line">ExecStart=/usr/local/nsq-1.1.0/bin/nsqlookupd</span><br><span class="line">Restart=on-abort</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
 <p><code>vim /usr/lib/systemd/system/nsqd.service</code><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=nsqd daemon Service</span><br><span class="line">After=network.target remote-fs.target nss-lookup.target</span><br><span class="line">[Service]</span><br><span class="line"><span class="meta">#</span>Type=</span><br><span class="line">PrivateTmp=yes</span><br><span class="line">ExecStart=/usr/local/nsq-1.1.0/bin/nsqd --lookupd-tcp-address=0.0.0.0:4160 --tcp-address=0.0.0.0:4150 --http-address=0.0.0.0:4151 --broadcast-address=127.0.0.1</span><br><span class="line"><span class="meta">#</span>修改broadcast-address</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
@@ -16,4 +183,358 @@
 <p>发布<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先创建一个主题，并且发布10条消息</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"github.com/nsqio/go-nsq"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	<span class="comment">//nsqd的地址，使用了tcp监听的端口</span></span><br><span class="line">	tcpNsqdAddrr = <span class="string">"127.0.0.1:4150"</span></span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">//初始化配置</span></span><br><span class="line">	config := nsq.NewConfig()</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">		<span class="comment">//创建10个生产者</span></span><br><span class="line">		tPro, err := nsq.NewProducer(tcpNsqdAddrr, config)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(err)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//主题</span></span><br><span class="line">		topic := <span class="string">"new insert"</span></span><br><span class="line">		<span class="comment">//主题内容</span></span><br><span class="line">		tCommand := <span class="string">"new data!"</span></span><br><span class="line">		<span class="comment">//发布消息</span></span><br><span class="line">		err = tPro.Publish(topic, []<span class="keyword">byte</span>(tCommand))</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(err)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run main.go</span><br></pre></td></tr></table></figure>
 <p>我们可以查看下nsq的管理平台，可以看到Nsqd接收到了10条信息，10条信息都储存在内存中，没有被消化。没有任何服务订阅了这个topic，所以topic的消息都没有被消化。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建一个消费者去订阅我们的主题</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"github.com/nsqio/go-nsq"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"sync"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	<span class="comment">//nsqd的地址，使用了tcp监听的端口</span></span><br><span class="line">	tcpNsqdAddrr = <span class="string">"127.0.0.1:4150"</span></span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line"><span class="comment">//声明一个结构体，实现HandleMessage接口方法（根据文档的要求）</span></span><br><span class="line"><span class="keyword">type</span> NsqHandler <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">//消息数</span></span><br><span class="line">	msqCount <span class="keyword">int64</span></span><br><span class="line">	<span class="comment">//标识ID</span></span><br><span class="line">	nsqHandlerID <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//实现HandleMessage方法</span></span><br><span class="line"><span class="comment">//message是接收到的消息</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *NsqHandler)</span> <span class="title">HandleMessage</span><span class="params">(message *nsq.Message)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="comment">//没收到一条消息+1</span></span><br><span class="line">	s.msqCount++</span><br><span class="line">	<span class="comment">//打印输出信息和ID</span></span><br><span class="line">	fmt.Println(s.msqCount,s.nsqHandlerID)</span><br><span class="line">	<span class="comment">//打印消息的一些基本信息</span></span><br><span class="line">	fmt.Printf(<span class="string">"msg.Timestamp=%v, msg.nsqaddress=%s,msg.body=%s \n"</span>, time.Unix(<span class="number">0</span>  , message.Timestamp).Format(<span class="string">"2006-01-02 03:04:05"</span>) , message.NSQDAddress, <span class="keyword">string</span>(message.Body))</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">//初始化配置</span></span><br><span class="line">	config := nsq.NewConfig()</span><br><span class="line">	<span class="comment">//创造消费者，参数一时订阅的主题，参数二是使用的通道</span></span><br><span class="line">	com, err := nsq.NewConsumer(<span class="string">"new insert"</span>, <span class="string">"channel1"</span>, config)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//添加处理回调</span></span><br><span class="line">	com.AddHandler(&amp;NsqHandler&#123;nsqHandlerID:<span class="string">"One"</span>&#125;)</span><br><span class="line">	<span class="comment">//连接对应的nsqd</span></span><br><span class="line">	err = com.ConnectToNSQD(tcpNsqdAddrr)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">//只是为了不结束此进程，这里没有意义</span></span><br><span class="line">	<span class="keyword">var</span> wg  = &amp;sync.WaitGroup&#123;&#125;</span><br><span class="line">	wg.Add(<span class="number">1</span>)</span><br><span class="line">	wg.Wait()</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	result:</span></span><br><span class="line"><span class="comment">	</span></span><br><span class="line"><span class="comment">	msg.Timestamp=2018-11-05 14:22:18, msg.nsqaddress=127.0.0.1:4150,msg.body=new data! </span></span><br><span class="line"><span class="comment">	1 One</span></span><br><span class="line"><span class="comment">	msg.Timestamp=2018-11-05 14:22:18, msg.nsqaddress=127.0.0.1:4150,msg.body=new data! </span></span><br><span class="line"><span class="comment">	2 One</span></span><br><span class="line"><span class="comment">	msg.Timestamp=2018-11-05 14:22:18, msg.nsqaddress=127.0.0.1:4150,msg.body=new data! </span></span><br><span class="line"><span class="comment">	3 One</span></span><br><span class="line"><span class="comment">	msg.Timestamp=2018-11-05 14:22:18, msg.nsqaddress=127.0.0.1:4150,msg.body=new data!</span></span><br><span class="line"><span class="comment">	...</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="over"><a href="#over" class="headerlink" title="over"></a>over</h3></div></article></div></main><footer><div class="paginator"><a class="prev" href="/2018/11/07/docker-笔记/">上一篇</a><a class="next" href="/2018/11/04/对于goroutine的一些理解/">下一篇</a></div><div class="copyright"><p>© 2017 - 2018 PEACE & LOVE</p><p>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>, <a href="https://github.com/jeremyfan/hexo-theme-still" target="_blank">theme</a> by <a href="https://github.com/jeremyfan" target="_blank">刘洋@liuyang</a>.</p></div></footer></div></body></html>
+<h3 id="over"><a href="#over" class="headerlink" title="over"></a>over</h3>
+      </div>
+    </div>
+<!--
+   # <div class="copy-right">
+    #  <div class="markdown-body">
+     #   <blockquote>
+      #  <p>本文作者：董沅鑫<br>
+       # 本文链接： <a href="">http://yoursite.com/2018/11/05/nsq的使用/</a><br>
+       # 版权声明： 本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</p>
+       # </blockquote>
+      #</div>
+    #</div>
+-->
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <span>
+          <i class="iconfont icon-06tags"></i>标签: 
+          
+            
+            <span class="span--tag">
+              <a href="/tags/学习/">
+                #学习
+              </a>
+            </span>
+            
+          
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+setTimeout(generateToc, 1000);
+</script>
+
+
+  <nav class="post-navigation">
+    
+      <div class="nav-pre">
+        <i class="iconfont icon-prev"></i>
+        上一篇:
+        <a href="/2018/11/04/对于goroutine的一些理解/" target="_self">对于goroutine的一些理解</a>
+      </div>
+    
+    
+      <div class="nav-next">
+        下一篇:
+        <a href="/2018/11/07/docker-笔记/" target="_self">docker 笔记</a>
+        <i class="iconfont icon-next"></i>
+      </div>
+    
+  </nav>
+<!--
+  <a href="#comment" class="comment-anchor"></a>
+  <div class="comment-title"><i class="iconfont icon-footprint"></i> 留下足迹 <i class="iconfont icon-footprint"></i></div>
+  <div id="vcomments"></div>
+-->
+
+  <script defer>
+  if( false ) {
+    let path = getRealPath()
+    new Valine({
+      el: "#vcomments",
+      appId: "1W3exCoRBiBAprj1t5y9jilg-gzGzoHsz",
+      appKey: "grefGUqOnQdX9c78Nm3gkKmG",
+      notify: false,
+      verify: false,
+      avatar: "robohash",
+      placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
+      path
+    });
+  }
+</script>
+
+  <script defer>
+const valineAPI = (() => {
+  try {
+    AV.init("1W3exCoRBiBAprj1t5y9jilg-gzGzoHsz", "grefGUqOnQdX9c78Nm3gkKmG");
+  } catch(error) {}
+  const isExist = (identity) => {
+    identity = identity || getRealPath();
+    let query = new AV.Query('Timer');
+    return new Promise((resolve, reject) => {
+      query.equalTo("identity", identity);
+      query.find().then(results => {
+        resolve(results.length > 0);
+      }, error => reject(error));
+    })
+  }
+
+  const _get = (identity) => {
+    let query = null;
+    if(identity && identity instanceof Array){
+      let querys = [];
+      for(let i = 0; i < identity.length; ++i) {
+        querys[i] = new AV.Query('Timer');
+        querys[i].equalTo('identity', identity[i]);
+      }
+      query = AV.Query.or.apply(null ,querys);
+    } else {
+      identity = identity || getRealPath();
+      query = new AV.Query("Timer");
+      query.equalTo("identity", identity);
+    }
+
+    return new Promise((resolve, reject) => {
+      query.find()
+      .then(results => resolve(results))
+      .catch(error => reject(error))
+    })
+  }
+
+  const create = (identity) => {
+    identity = identity || getRealPath();
+    return new Promise((resolve, reject) => {
+      let Todo = AV.Object.extend('Timer');
+      let todo = new Todo();
+      todo.set("times", 1);
+      todo.set("identity", identity);
+      todo.save().then(res => resolve(true), error => reject(error));
+    })
+  }
+
+  const update = (identity) => {
+    identity = identity || getRealPath();
+    return new Promise((resolve, reject) => {
+      let query = new AV.Query('Timer');
+      query.equalTo("identity", identity);
+      query.find().then(todos => {
+        todos.forEach(todo => {
+          todo.set("times", todo.attributes.times + 1);
+        });
+        return AV.Object.saveAll(todos);
+      }).then(todos => resolve(true), error => reject(error));
+    })
+  }
+
+  return {
+    isExist,
+    _get,
+    update,
+    create
+  }
+})()
+
+const calcAndWriteTimes = () => {
+  let isPost = true;
+
+  let timerAllDOM = document.querySelectorAll(".article-timer");
+
+  if(isPost) {
+    let identity = timerAllDOM[0].getAttribute("data-identity");
+    valineAPI.isExist(identity)
+    .then(exist => {
+      if(exist) {
+        return valineAPI.update(identity);
+      }
+      return new Promise(resolve => resolve(true));
+    })
+    .then( succuess => valineAPI._get(identity))
+    .then( result => timerAllDOM[0].innerText = result[0].attributes.times)
+    .catch(error => console.log(error.message))
+    return ;
+  }
+
+  let timerDOMCache = {};
+
+  for(let timerDOM of timerAllDOM) {
+    let identity = timerDOM.getAttribute("data-identity");
+    timerDOMCache[identity] = {
+      dom: timerDOM,
+      times: undefined
+    };
+  }
+
+  let identities = Object.keys(timerDOMCache);
+  valineAPI._get(identities).then(results => {
+    for(let result of results) {
+      let {identity, times} = result.attributes;
+      timerDOMCache[identity].times = times;
+      timerDOMCache[identity].dom.innerText = times;
+    }
+    for(let identity of identities) {
+      if(timerDOMCache[identity].times){
+        continue;
+      }
+      timerDOMCache[identity].dom.innerText = 1;
+      valineAPI.create(identity);
+    }
+  }).catch(error => console.log(error.message))
+}
+
+if(true){
+  calcAndWriteTimes();
+}
+</script>
+
+</div>
+
+
+
+      <script>
+  let isMathjaxConfig = false; // 防止重复调用Config，造成性能损耗
+
+  const initMathjaxConfig = () => {
+    if (!window.MathJax) {
+      return;
+    }
+    window.MathJax.Hub.Config({
+      showProcessingMessages: false, //关闭js加载过程信息
+      messageStyle: "none", //不显示信息
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]], //行内公式选择符
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]], //段内公式选择符
+        skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"] //避开某些标签
+      },
+      "HTML-CSS": {
+        availableFonts: ["STIX", "TeX"], //可选字体
+        showMathMenu: false //关闭右击菜单显示
+      }
+    });
+    isMathjaxConfig = true; // 
+  };
+  if (isMathjaxConfig === false) { // 如果：没有配置MathJax
+    initMathjaxConfig();
+  }
+  window.MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('app')]);
+  
+</script>
+<footer>
+  <p class="site-info">
+    博客已萌萌哒运行<span id="time-to-now"></span><span class="my-face">(●'◡'●)ﾉ♥</span>
+<!--
+    #<br>
+    #Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
+    #<br>
+-->
+  </p>
+</footer>
+
+<script>
+const timeToNowDOM = document.querySelector("#time-to-now");
+const startTimestamp = new Date(2018, 2, 10, 23, 58).getTime();
+
+const updateTimeStr = () => {
+  let offset = parseInt(
+      (new Date().getTime() - startTimestamp) / 1000,
+      10
+    ),
+    day = Math.floor(offset / 86400),
+    hour = Math.floor((offset % 86400) / 3600),
+    minute = Math.floor(((offset % 86400) % 3600) / 60),
+    second = Math.floor(((offset % 86400) % 3600) % 60);
+  timeToNowDOM.innerHTML =
+    day + "天" + hour + "小时" + minute + "分钟" + second + "秒";
+  setTimeout(updateTimeStr, 500);
+}
+
+setTimeout(updateTimeStr, 500);
+</script>
+
+
+      <div class="back-to-top hidden">
+  <span>
+    <i class="iconfont icon-60"></i><span></span>%
+  </span>
+</div>
+
+<script>
+const updateIconToTop = percent => {
+  let dom = document.querySelector(".back-to-top span span");
+  dom.innerText = percent;
+  if(percent < 1) {
+    document.querySelector(".back-to-top").className = "back-to-top hidden";
+  } else {
+    document.querySelector(".back-to-top").className = "back-to-top";
+  }
+}
+
+const handleScoll = () => {
+  let isRunning = false;
+  return () => {
+    if (isRunning) return;
+    isRunning = true;
+    window.requestAnimationFrame(timestamp => {
+      let scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop,
+        scrollHeight =
+          document.documentElement.scrollHeight ||
+          document.body.scrollHeight,
+        clientHeight =
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+      isRunning = false;
+      if (scrollTop <= 1) {
+        updateIconToTop(0);
+        return;
+      }
+      if (scrollTop + clientHeight >= scrollHeight) {
+        updateIconToTop(100);
+      } else {
+        updateIconToTop(parseInt(
+          100 * scrollTop / (scrollHeight - clientHeight),
+          10
+        ));
+      }
+    });
+  };
+}
+
+const backToTop = () => {
+  let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop,
+    delay = 10,
+    time = 200;
+  if (scrollTop <= 20) {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    return;
+  }
+  let step = Math.ceil(scrollTop * delay / time);
+  let timer = setInterval(() => {
+    scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop - step <= 0) {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      clearInterval(timer);
+    } else {
+      document.documentElement.scrollTop = scrollTop - step;
+      document.body.scrollTop = scrollTop - step;
+    }
+  }, delay);
+}
+
+document.addEventListener("scroll", handleScoll(), false);
+
+document.querySelector(".back-to-top").addEventListener("click", backToTop, false);
+
+</script>
+
+      <aside id="sidebar">
+        <p id="sidebar-header"></p>
+        <ol id="sidebar-toc"></ol>
+      </aside>
+
+    </div>
+  </body>
+
+</html>

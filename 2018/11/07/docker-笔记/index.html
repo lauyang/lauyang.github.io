@@ -1,6 +1,173 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> docker 笔记 · 刘洋的博客</title><meta name="description" content="docker 笔记 - 刘洋@liuyang"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico?v=2018"><link rel="stylesheet" href="/css/style.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="刘洋的博客"></head><body><div class="wrap"><header><h1 class="title">Jeremy's Blog</h1><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link" href="/" target="_self">主页</a></li><li class="nav-list-item"><a class="nav-list-link" href="/archives/" target="_self">归档</a></li><li class="nav-list-item"><a class="nav-list-link" href="http://jeremyfan.name" target="_blank">关于</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">docker 笔记</h1><div class="post-info">Nov 7, 2018</div><div class="post-content"><blockquote>
-<p>docker的环境搭建以及使用<br><a id="more"></a></p>
-</blockquote>
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="刘洋, lauy0911@gmail.com">
+  
+  
+  
+  <title>docker 笔记 | 刘洋的博客</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="学习,学习,">
+  
+
+  
+
+  
+    <link rel="alternate" href="/atom.xml" title="刘洋的博客" type="application/atom+xml">
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  
+
+  <link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/icon/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+  <script src="/js/util.js"></script>
+<script src="/js/valine.min.js"></script>
+  
+  <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+
+</head>
+
+
+  <body>
+
+    
+
+    <div id="app">
+
+      <div class="header-wrap">
+  <header>
+    <div class="site-brand">
+      <div class="site-title">
+        <a href="/">刘洋的博客</a>
+      </div>
+    </div>
+    <nav class="site-navigation">
+      <ul class="nav-menu">
+      
+        <li class="nav-item" data-path="/">
+          
+            <a href="/">主页</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          
+            <a href="/archives/">归档</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          
+            <a href="/categories/">分类</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          
+            <a href="/tags/">标签</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          
+            <a href="/about/">关于</a>
+          
+        </li>
+      
+      </ul>
+    </nav>
+    <i class="iconfont icon-menu"></i>
+  </header>
+</div>
+
+<script>
+  let links = document.querySelectorAll('.nav-item');
+  for(let link of links){
+    let childrenLink = link.querySelector('ul');
+    link.addEventListener('mouseenter', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown active";
+      }
+    })
+    link.addEventListener('mouseleave', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown";
+      }
+    })
+  }
+  let rootRealPath = getRealPath(window.location.pathname, true);
+  for(let link of links) {
+    let linkPath = link.getAttribute("data-path");
+    if(linkPath && getRealPath(linkPath, true) === rootRealPath) {
+      link.className = "nav-item hover";
+    }
+  }
+
+  let iconMenu = document.querySelector("i.iconfont.icon-menu"),
+    iconMenuClicked = false;
+  let navDOM = document.querySelector("nav.site-navigation");
+  iconMenu.addEventListener("click", () => {
+    iconMenuClicked 
+      ? navDOM.className = "site-navigation active"
+      : navDOM.className = "site-navigation";
+    iconMenuClicked = !iconMenuClicked;
+  })
+</script>
+
+      
+
+
+
+
+
+
+
+
+<div class="container">
+
+  
+<div>
+  <div class="post">
+    <h1 class="article-title">
+      <span>docker 笔记</span>
+    </h1>
+    <div class="article-top-meta">
+      <span>
+        发布 : 
+        2018-11-07
+      </span>
+      <span>
+        分类 : 
+          
+            <a href="/categories/学习/">
+              学习
+            </a>
+          
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="docker-笔记"></span>
+      </span>
+    </div>
+    <div class="article-content">
+      <div class="markdown-body">
+        <p></p>
+
 <h3 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> step 1: 安装必要的一些系统工具</span><br><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"><span class="meta">#</span> Step 2: 添加软件源信息</span><br><span class="line">sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"><span class="meta">#</span> Step 3: 更新并安装 Docker-CE</span><br><span class="line">sudo yum makecache fast</span><br><span class="line">sudo yum -y install docker-ce</span><br><span class="line"><span class="meta">#</span> Step 4: 开启Docker服务</span><br><span class="line">sudo service docker start</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>查看安装的版本</span><br><span class="line">docker version [-f &#123;&#123;.Server.Version&#125;&#125;]</span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
 <h3 id="基于dockerfile使用docker-build-创建images"><a href="#基于dockerfile使用docker-build-创建images" class="headerlink" title="基于dockerfile使用docker build 创建images"></a>基于dockerfile使用docker build 创建images</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>格式  </span><br><span class="line">docker build . -t 需要打包成的镜像名称  </span><br><span class="line"><span class="meta">#</span>备注：.代表dockerfile在当前目录,以dockerfile为准  </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>示例  </span><br><span class="line">docker build . -t liimages/spider1.0</span><br></pre></td></tr></table></figure>
 <h3 id="基于image运行docker容器同时运行指定主机端口"><a href="#基于image运行docker容器同时运行指定主机端口" class="headerlink" title="基于image运行docker容器同时运行指定主机端口"></a>基于image运行docker容器同时运行指定主机端口</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>格式  </span><br><span class="line">docker run -d -p 主机端口:容器端口 镜像名称或者Id  </span><br><span class="line"><span class="meta">#</span>备注：-d:后台运行,-p 暴露端口  </span><br><span class="line"><span class="meta">#</span>4000:80的意思是容器的80的端口映射到主机的4000端口 外部以400端口访问</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>示例  </span><br><span class="line">docker run -d -p 4000:80 liimages/spider1.0</span><br></pre></td></tr></table></figure>
@@ -9,4 +176,357 @@
 <h3 id="删除镜像-删除容器是rm"><a href="#删除镜像-删除容器是rm" class="headerlink" title="删除镜像.删除容器是rm"></a>删除镜像.删除容器是rm</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>格式  </span><br><span class="line">格式一：docker rmi 镜像名或者镜像Id  </span><br><span class="line">格式二：docker rmi -f 镜像名或者镜像Id  </span><br><span class="line"><span class="meta">#</span>备注：强制删除与该镜像有关的容器（包括启动中的）和该镜像  </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>示例  </span><br><span class="line">docker rmi liimages/spider2.0</span><br></pre></td></tr></table></figure>
 <h3 id="把打包的镜像上传到仓库"><a href="#把打包的镜像上传到仓库" class="headerlink" title="把打包的镜像上传到仓库"></a>把打包的镜像上传到仓库</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>格式  </span><br><span class="line"><span class="meta">#</span>前提1：镜像的名字要符合官方标准  </span><br><span class="line"><span class="meta">#</span>前提2：使用docker login 登录  </span><br><span class="line">格式：docker push 镜像名  </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>示例  </span><br><span class="line">docker push 镜像名</span><br></pre></td></tr></table></figure>
 <h3 id="服务的启动命令"><a href="#服务的启动命令" class="headerlink" title="服务的启动命令"></a>服务的启动命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>mysql的启动命令  </span><br><span class="line">docker run --restart=always --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=mypassword -d docker.io/mysql   </span><br><span class="line"><span class="meta">#</span>启动一个mysql  </span><br><span class="line"><span class="meta">#</span>其中--restart=always是自动启动的意思  </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>redis的启动命令  </span><br><span class="line">docker run --restart=always  -p 6379:6379 --name redis -d redis redis-server --appendonly yes --requirepass mypassword  </span><br><span class="line"><span class="meta">#</span>其中：--appendonly yes是持久化数据的意思  </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>安装gitlab  </span><br><span class="line"><span class="meta">#</span>dock查找镜像  </span><br><span class="line">docker search gitlab  </span><br><span class="line"><span class="meta">#</span>下载汉化的社区版本  </span><br><span class="line">docker pull  twang2218/gitlab-ce-zh  </span><br><span class="line"><span class="meta">#</span>下载好之后运行镜像  </span><br><span class="line">docker run -d -p 8888:80 --restart=always --name gitlab twang2218/gitlab-ce-zh  </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>安装mongo</span><br><span class="line">docker search mongo</span><br><span class="line">docker pull  mongo</span><br><span class="line"><span class="meta">#</span>这里的--name 放在前面并映射端口</span><br><span class="line">docker run --name mongo -p 27017:27017 -d mongo --auth</span><br><span class="line"><span class="meta">#</span>进入容器</span><br><span class="line">docker exec -it mongo bash</span><br><span class="line"><span class="meta">#</span>auth</span><br><span class="line">mongo</span><br><span class="line">use admin</span><br><span class="line"><span class="meta">#</span>创建用户,此用户创建成功,则后续操作都需要用户认证</span><br><span class="line">db.createUser(&#123;user:"root",pwd:"root",roles:[&#123;role:'root',db:'admin'&#125;]&#125;)</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
-</div></article></div></main><footer><div class="paginator"><a class="prev" href="/2018/11/13/k8s测试环境集群搭建/">上一篇</a><a class="next" href="/2018/11/05/nsq的使用/">下一篇</a></div><div class="copyright"><p>© 2017 - 2018 PEACE & LOVE</p><p>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>, <a href="https://github.com/jeremyfan/hexo-theme-still" target="_blank">theme</a> by <a href="https://github.com/jeremyfan" target="_blank">刘洋@liuyang</a>.</p></div></footer></div></body></html>
+      </div>
+    </div>
+<!--
+   # <div class="copy-right">
+    #  <div class="markdown-body">
+     #   <blockquote>
+      #  <p>本文作者：董沅鑫<br>
+       # 本文链接： <a href="">http://yoursite.com/2018/11/07/docker-笔记/</a><br>
+       # 版权声明： 本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</p>
+       # </blockquote>
+      #</div>
+    #</div>
+-->
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <span>
+          <i class="iconfont icon-06tags"></i>标签: 
+          
+            
+            <span class="span--tag">
+              <a href="/tags/学习/">
+                #学习
+              </a>
+            </span>
+            
+          
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+setTimeout(generateToc, 1000);
+</script>
+
+
+  <nav class="post-navigation">
+    
+      <div class="nav-pre">
+        <i class="iconfont icon-prev"></i>
+        上一篇:
+        <a href="/2018/11/05/nsq的使用/" target="_self">nsq的使用</a>
+      </div>
+    
+    
+      <div class="nav-next">
+        下一篇:
+        <a href="/2018/11/13/k8s测试环境集群搭建/" target="_self">k8s测试环境集群搭建</a>
+        <i class="iconfont icon-next"></i>
+      </div>
+    
+  </nav>
+<!--
+  <a href="#comment" class="comment-anchor"></a>
+  <div class="comment-title"><i class="iconfont icon-footprint"></i> 留下足迹 <i class="iconfont icon-footprint"></i></div>
+  <div id="vcomments"></div>
+-->
+
+  <script defer>
+  if( false ) {
+    let path = getRealPath()
+    new Valine({
+      el: "#vcomments",
+      appId: "1W3exCoRBiBAprj1t5y9jilg-gzGzoHsz",
+      appKey: "grefGUqOnQdX9c78Nm3gkKmG",
+      notify: false,
+      verify: false,
+      avatar: "robohash",
+      placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
+      path
+    });
+  }
+</script>
+
+  <script defer>
+const valineAPI = (() => {
+  try {
+    AV.init("1W3exCoRBiBAprj1t5y9jilg-gzGzoHsz", "grefGUqOnQdX9c78Nm3gkKmG");
+  } catch(error) {}
+  const isExist = (identity) => {
+    identity = identity || getRealPath();
+    let query = new AV.Query('Timer');
+    return new Promise((resolve, reject) => {
+      query.equalTo("identity", identity);
+      query.find().then(results => {
+        resolve(results.length > 0);
+      }, error => reject(error));
+    })
+  }
+
+  const _get = (identity) => {
+    let query = null;
+    if(identity && identity instanceof Array){
+      let querys = [];
+      for(let i = 0; i < identity.length; ++i) {
+        querys[i] = new AV.Query('Timer');
+        querys[i].equalTo('identity', identity[i]);
+      }
+      query = AV.Query.or.apply(null ,querys);
+    } else {
+      identity = identity || getRealPath();
+      query = new AV.Query("Timer");
+      query.equalTo("identity", identity);
+    }
+
+    return new Promise((resolve, reject) => {
+      query.find()
+      .then(results => resolve(results))
+      .catch(error => reject(error))
+    })
+  }
+
+  const create = (identity) => {
+    identity = identity || getRealPath();
+    return new Promise((resolve, reject) => {
+      let Todo = AV.Object.extend('Timer');
+      let todo = new Todo();
+      todo.set("times", 1);
+      todo.set("identity", identity);
+      todo.save().then(res => resolve(true), error => reject(error));
+    })
+  }
+
+  const update = (identity) => {
+    identity = identity || getRealPath();
+    return new Promise((resolve, reject) => {
+      let query = new AV.Query('Timer');
+      query.equalTo("identity", identity);
+      query.find().then(todos => {
+        todos.forEach(todo => {
+          todo.set("times", todo.attributes.times + 1);
+        });
+        return AV.Object.saveAll(todos);
+      }).then(todos => resolve(true), error => reject(error));
+    })
+  }
+
+  return {
+    isExist,
+    _get,
+    update,
+    create
+  }
+})()
+
+const calcAndWriteTimes = () => {
+  let isPost = true;
+
+  let timerAllDOM = document.querySelectorAll(".article-timer");
+
+  if(isPost) {
+    let identity = timerAllDOM[0].getAttribute("data-identity");
+    valineAPI.isExist(identity)
+    .then(exist => {
+      if(exist) {
+        return valineAPI.update(identity);
+      }
+      return new Promise(resolve => resolve(true));
+    })
+    .then( succuess => valineAPI._get(identity))
+    .then( result => timerAllDOM[0].innerText = result[0].attributes.times)
+    .catch(error => console.log(error.message))
+    return ;
+  }
+
+  let timerDOMCache = {};
+
+  for(let timerDOM of timerAllDOM) {
+    let identity = timerDOM.getAttribute("data-identity");
+    timerDOMCache[identity] = {
+      dom: timerDOM,
+      times: undefined
+    };
+  }
+
+  let identities = Object.keys(timerDOMCache);
+  valineAPI._get(identities).then(results => {
+    for(let result of results) {
+      let {identity, times} = result.attributes;
+      timerDOMCache[identity].times = times;
+      timerDOMCache[identity].dom.innerText = times;
+    }
+    for(let identity of identities) {
+      if(timerDOMCache[identity].times){
+        continue;
+      }
+      timerDOMCache[identity].dom.innerText = 1;
+      valineAPI.create(identity);
+    }
+  }).catch(error => console.log(error.message))
+}
+
+if(true){
+  calcAndWriteTimes();
+}
+</script>
+
+</div>
+
+
+
+      <script>
+  let isMathjaxConfig = false; // 防止重复调用Config，造成性能损耗
+
+  const initMathjaxConfig = () => {
+    if (!window.MathJax) {
+      return;
+    }
+    window.MathJax.Hub.Config({
+      showProcessingMessages: false, //关闭js加载过程信息
+      messageStyle: "none", //不显示信息
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]], //行内公式选择符
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]], //段内公式选择符
+        skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"] //避开某些标签
+      },
+      "HTML-CSS": {
+        availableFonts: ["STIX", "TeX"], //可选字体
+        showMathMenu: false //关闭右击菜单显示
+      }
+    });
+    isMathjaxConfig = true; // 
+  };
+  if (isMathjaxConfig === false) { // 如果：没有配置MathJax
+    initMathjaxConfig();
+  }
+  window.MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('app')]);
+  
+</script>
+<footer>
+  <p class="site-info">
+    博客已萌萌哒运行<span id="time-to-now"></span><span class="my-face">(●'◡'●)ﾉ♥</span>
+<!--
+    #<br>
+    #Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
+    #<br>
+-->
+  </p>
+</footer>
+
+<script>
+const timeToNowDOM = document.querySelector("#time-to-now");
+const startTimestamp = new Date(2018, 2, 10, 23, 58).getTime();
+
+const updateTimeStr = () => {
+  let offset = parseInt(
+      (new Date().getTime() - startTimestamp) / 1000,
+      10
+    ),
+    day = Math.floor(offset / 86400),
+    hour = Math.floor((offset % 86400) / 3600),
+    minute = Math.floor(((offset % 86400) % 3600) / 60),
+    second = Math.floor(((offset % 86400) % 3600) % 60);
+  timeToNowDOM.innerHTML =
+    day + "天" + hour + "小时" + minute + "分钟" + second + "秒";
+  setTimeout(updateTimeStr, 500);
+}
+
+setTimeout(updateTimeStr, 500);
+</script>
+
+
+      <div class="back-to-top hidden">
+  <span>
+    <i class="iconfont icon-60"></i><span></span>%
+  </span>
+</div>
+
+<script>
+const updateIconToTop = percent => {
+  let dom = document.querySelector(".back-to-top span span");
+  dom.innerText = percent;
+  if(percent < 1) {
+    document.querySelector(".back-to-top").className = "back-to-top hidden";
+  } else {
+    document.querySelector(".back-to-top").className = "back-to-top";
+  }
+}
+
+const handleScoll = () => {
+  let isRunning = false;
+  return () => {
+    if (isRunning) return;
+    isRunning = true;
+    window.requestAnimationFrame(timestamp => {
+      let scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop,
+        scrollHeight =
+          document.documentElement.scrollHeight ||
+          document.body.scrollHeight,
+        clientHeight =
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+      isRunning = false;
+      if (scrollTop <= 1) {
+        updateIconToTop(0);
+        return;
+      }
+      if (scrollTop + clientHeight >= scrollHeight) {
+        updateIconToTop(100);
+      } else {
+        updateIconToTop(parseInt(
+          100 * scrollTop / (scrollHeight - clientHeight),
+          10
+        ));
+      }
+    });
+  };
+}
+
+const backToTop = () => {
+  let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop,
+    delay = 10,
+    time = 200;
+  if (scrollTop <= 20) {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    return;
+  }
+  let step = Math.ceil(scrollTop * delay / time);
+  let timer = setInterval(() => {
+    scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop - step <= 0) {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      clearInterval(timer);
+    } else {
+      document.documentElement.scrollTop = scrollTop - step;
+      document.body.scrollTop = scrollTop - step;
+    }
+  }, delay);
+}
+
+document.addEventListener("scroll", handleScoll(), false);
+
+document.querySelector(".back-to-top").addEventListener("click", backToTop, false);
+
+</script>
+
+      <aside id="sidebar">
+        <p id="sidebar-header"></p>
+        <ol id="sidebar-toc"></ol>
+      </aside>
+
+    </div>
+  </body>
+
+</html>

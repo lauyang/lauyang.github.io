@@ -1,9 +1,960 @@
-<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Jeremy's Blog</title><meta name="description" content="Jeremy Fan's Blog，14 号院"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico?v=2018"><link rel="stylesheet" href="/css/style.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="刘洋的博客"></head><body><div class="wrap"><header><h1 class="title">Jeremy's Blog</h1><ul class="nav nav-list"><li class="nav-list-item"><a class="nav-list-link active" href="/" target="_self">主页</a></li><li class="nav-list-item"><a class="nav-list-link" href="/archives/" target="_self">归档</a></li><li class="nav-list-item"><a class="nav-list-link" href="http://jeremyfan.name" target="_blank">关于</a></li></ul></header><main class="container"><ul class="home post-list"><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a class="post-title-link" href="/2018/11/13/k8s测试环境集群搭建/">k8s测试环境集群搭建</a></h2><div class="post-info">Nov 13, 2018</div><div class="post-content"><blockquote>
-<p>准备搭建1主(master)3从(slave)的集群测试环境…<br></p></blockquote></div><a class="read-more" href="/2018/11/13/k8s测试环境集群搭建/">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a class="post-title-link" href="/2018/11/07/docker-笔记/">docker 笔记</a></h2><div class="post-info">Nov 7, 2018</div><div class="post-content"><blockquote>
-<p>docker的环境搭建以及使用<br></p></blockquote></div><a class="read-more" href="/2018/11/07/docker-笔记/">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a class="post-title-link" href="/2018/11/05/nsq的使用/">nsq的使用</a></h2><div class="post-info">Nov 5, 2018</div><div class="post-content"><blockquote>
-<p>golang 中nsq的使用<br></p></blockquote></div><a class="read-more" href="/2018/11/05/nsq的使用/">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a class="post-title-link" href="/2018/11/04/对于goroutine的一些理解/">对于goroutine的一些理解</a></h2><div class="post-info">Nov 4, 2018</div><div class="post-content"><blockquote>
-<p>goroutine 就是 Go语言提供的一种用户态线程，当然这种用户态线程是跑在内核级线程之上的…<br></p></blockquote></div><a class="read-more" href="/2018/11/04/对于goroutine的一些理解/">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a class="post-title-link" href="/2017/12/08/科学上网（你可以忽略这个）/">科学上网（你可以忽略这个）</a></h2><div class="post-info">Dec 8, 2017</div><div class="post-content"><blockquote>
-<p>科学上网（你可以忽略这个），搭建自已的科学上网环境<br></p></blockquote></div><a class="read-more" href="/2017/12/08/科学上网（你可以忽略这个）/">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a class="post-title-link" href="/2017/11/15/那个人藏了多少秘密/">那个人藏了多少秘密</a></h2><div class="post-info">Nov 15, 2017</div><div class="post-content"><blockquote>
-<p>那个人藏了多少秘密…<br></p></blockquote></div><a class="read-more" href="/2017/11/15/那个人藏了多少秘密/">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a class="post-title-link" href="/2017/10/20/我爸/">我爸</a></h2><div class="post-info">Oct 20, 2017</div><div class="post-content"><blockquote>
-<p>我通常在这几种情况下会想到他…<br></p></blockquote></div><a class="read-more" href="/2017/10/20/我爸/">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a class="post-title-link" href="/2017/09/01/mac搭建hexo-github博客/">mac搭建hexo+github博客</a></h2><div class="post-info">Sep 1, 2017</div><div class="post-content"><blockquote>
-<p>mac搭建hexo+github博客环境<br></p></blockquote></div><a class="read-more" href="/2017/09/01/mac搭建hexo-github博客/">...阅读全文</a></article></li></ul></main><footer><div class="paginator"></div><div class="copyright"><p>© 2017 - 2018 PEACE & LOVE</p><p>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>, <a href="https://github.com/jeremyfan/hexo-theme-still" target="_blank">theme</a> by <a href="https://github.com/jeremyfan" target="_blank">刘洋@liuyang</a>.</p></div></footer></div></body></html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="刘洋, lauy0911@gmail.com">
+  
+  
+  
+  <title>刘洋的博客</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Hexo, BMW">
+  
+
+  
+
+  
+    <link rel="alternate" href="/atom.xml" title="刘洋的博客" type="application/atom+xml">
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  
+
+  <link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/icon/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+  <script src="/js/util.js"></script>
+<script src="/js/valine.min.js"></script>
+  
+  <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+
+</head>
+
+
+  <body>
+
+    
+
+    <div id="app">
+
+      <div class="header-wrap">
+  <header>
+    <div class="site-brand">
+      <div class="site-title">
+        <a href="/">刘洋的博客</a>
+      </div>
+    </div>
+    <nav class="site-navigation">
+      <ul class="nav-menu">
+      
+        <li class="nav-item" data-path="/">
+          
+            <a href="/">主页</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          
+            <a href="/archives/">归档</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          
+            <a href="/categories/">分类</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          
+            <a href="/tags/">标签</a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          
+            <a href="/about/">关于</a>
+          
+        </li>
+      
+      </ul>
+    </nav>
+    <i class="iconfont icon-menu"></i>
+  </header>
+</div>
+
+<script>
+  let links = document.querySelectorAll('.nav-item');
+  for(let link of links){
+    let childrenLink = link.querySelector('ul');
+    link.addEventListener('mouseenter', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown active";
+      }
+    })
+    link.addEventListener('mouseleave', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown";
+      }
+    })
+  }
+  let rootRealPath = getRealPath(window.location.pathname, true);
+  for(let link of links) {
+    let linkPath = link.getAttribute("data-path");
+    if(linkPath && getRealPath(linkPath, true) === rootRealPath) {
+      link.className = "nav-item hover";
+    }
+  }
+
+  let iconMenu = document.querySelector("i.iconfont.icon-menu"),
+    iconMenuClicked = false;
+  let navDOM = document.querySelector("nav.site-navigation");
+  iconMenu.addEventListener("click", () => {
+    iconMenuClicked 
+      ? navDOM.className = "site-navigation active"
+      : navDOM.className = "site-navigation";
+    iconMenuClicked = !iconMenuClicked;
+  })
+</script>
+
+      
+<div class="container home-index">
+  
+  <div class="post">
+    <h1 class="article-title">
+      <a href="/2018/11/13/k8s测试环境集群搭建/">
+        <span>k8s测试环境集群搭建</span>
+      </a>
+    </h1>
+    <!-- PC端文章信息 -->
+    <div class="article-top-meta pc-view">
+      <span>
+        发布时间 : 2018-11-13
+      </span>
+    </div>
+    <!-- 移动端文章信息 -->
+    <div class="article-top-meta mobile-view">
+      <span>
+        发布 : 2018-11-13
+      </span>
+      <span>
+        分类 :
+        
+          <a href="/categories/学习/">
+            学习
+          </a>
+        
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="k8s测试环境集群搭建"></span>
+      </span>
+    </div>
+    <!-- 文章简介 -->
+    <div class="article-content">
+      <div class="markdown-body article-content--inner" v-html="mdToHtml(psg.summary)">
+        <blockquote>
+<p>准备搭建1主(master)3从(slave)的集群测试环境…<br>
+      </p></blockquote></div>
+    </div>
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <!-- 分类pc端可见 -->
+        <span class="pc-view">
+          <i class="iconfont icon-tag"></i>分类:
+          
+            <a href="/categories/学习/">
+              学习
+            </a>
+          
+        </span>
+        <span>
+          <i class="iconfont icon-06tags"></i>标签:
+          
+            
+              <span class="span--tag">
+                <a href="/tags/学习/">
+                  #学习
+                </a>
+              </span>
+            
+                    
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+        <span class="pc-view">
+          <i class="iconfont icon-view"></i>浏览: <span class="article-timer" data-identity="k8s测试环境集群搭建"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="article-title">
+      <a href="/2018/11/07/docker-笔记/">
+        <span>docker 笔记</span>
+      </a>
+    </h1>
+    <!-- PC端文章信息 -->
+    <div class="article-top-meta pc-view">
+      <span>
+        发布时间 : 2018-11-07
+      </span>
+    </div>
+    <!-- 移动端文章信息 -->
+    <div class="article-top-meta mobile-view">
+      <span>
+        发布 : 2018-11-07
+      </span>
+      <span>
+        分类 :
+        
+          <a href="/categories/学习/">
+            学习
+          </a>
+        
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="docker-笔记"></span>
+      </span>
+    </div>
+    <!-- 文章简介 -->
+    <div class="article-content">
+      <div class="markdown-body article-content--inner" v-html="mdToHtml(psg.summary)">
+        <blockquote>
+<p>docker的环境搭建以及使用<br>
+      </p></blockquote></div>
+    </div>
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <!-- 分类pc端可见 -->
+        <span class="pc-view">
+          <i class="iconfont icon-tag"></i>分类:
+          
+            <a href="/categories/学习/">
+              学习
+            </a>
+          
+        </span>
+        <span>
+          <i class="iconfont icon-06tags"></i>标签:
+          
+            
+              <span class="span--tag">
+                <a href="/tags/学习/">
+                  #学习
+                </a>
+              </span>
+            
+                    
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+        <span class="pc-view">
+          <i class="iconfont icon-view"></i>浏览: <span class="article-timer" data-identity="docker-笔记"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="article-title">
+      <a href="/2018/11/05/nsq的使用/">
+        <span>nsq的使用</span>
+      </a>
+    </h1>
+    <!-- PC端文章信息 -->
+    <div class="article-top-meta pc-view">
+      <span>
+        发布时间 : 2018-11-05
+      </span>
+    </div>
+    <!-- 移动端文章信息 -->
+    <div class="article-top-meta mobile-view">
+      <span>
+        发布 : 2018-11-05
+      </span>
+      <span>
+        分类 :
+        
+          <a href="/categories/学习/">
+            学习
+          </a>
+        
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="nsq的使用"></span>
+      </span>
+    </div>
+    <!-- 文章简介 -->
+    <div class="article-content">
+      <div class="markdown-body article-content--inner" v-html="mdToHtml(psg.summary)">
+        <blockquote>
+<p>golang 中nsq的使用<br>
+      </p></blockquote></div>
+    </div>
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <!-- 分类pc端可见 -->
+        <span class="pc-view">
+          <i class="iconfont icon-tag"></i>分类:
+          
+            <a href="/categories/学习/">
+              学习
+            </a>
+          
+        </span>
+        <span>
+          <i class="iconfont icon-06tags"></i>标签:
+          
+            
+              <span class="span--tag">
+                <a href="/tags/学习/">
+                  #学习
+                </a>
+              </span>
+            
+                    
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+        <span class="pc-view">
+          <i class="iconfont icon-view"></i>浏览: <span class="article-timer" data-identity="nsq的使用"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="article-title">
+      <a href="/2018/11/04/对于goroutine的一些理解/">
+        <span>对于goroutine的一些理解</span>
+      </a>
+    </h1>
+    <!-- PC端文章信息 -->
+    <div class="article-top-meta pc-view">
+      <span>
+        发布时间 : 2018-11-04
+      </span>
+    </div>
+    <!-- 移动端文章信息 -->
+    <div class="article-top-meta mobile-view">
+      <span>
+        发布 : 2018-11-04
+      </span>
+      <span>
+        分类 :
+        
+          <a href="/categories/学习/">
+            学习
+          </a>
+        
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="对于goroutine的一些理解"></span>
+      </span>
+    </div>
+    <!-- 文章简介 -->
+    <div class="article-content">
+      <div class="markdown-body article-content--inner" v-html="mdToHtml(psg.summary)">
+        <blockquote>
+<p>goroutine 就是 Go语言提供的一种用户态线程，当然这种用户态线程是跑在内核级线程之上的…<br>
+      </p></blockquote></div>
+    </div>
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <!-- 分类pc端可见 -->
+        <span class="pc-view">
+          <i class="iconfont icon-tag"></i>分类:
+          
+            <a href="/categories/学习/">
+              学习
+            </a>
+          
+        </span>
+        <span>
+          <i class="iconfont icon-06tags"></i>标签:
+          
+            
+              <span class="span--tag">
+                <a href="/tags/学习/">
+                  #学习
+                </a>
+              </span>
+            
+                    
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+        <span class="pc-view">
+          <i class="iconfont icon-view"></i>浏览: <span class="article-timer" data-identity="对于goroutine的一些理解"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="article-title">
+      <a href="/2017/12/08/科学上网（你可以忽略这个）/">
+        <span>科学上网（你可以忽略这个）</span>
+      </a>
+    </h1>
+    <!-- PC端文章信息 -->
+    <div class="article-top-meta pc-view">
+      <span>
+        发布时间 : 2017-12-08
+      </span>
+    </div>
+    <!-- 移动端文章信息 -->
+    <div class="article-top-meta mobile-view">
+      <span>
+        发布 : 2017-12-08
+      </span>
+      <span>
+        分类 :
+        
+          <a href="/categories/学习/">
+            学习
+          </a>
+        
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="科学上网（你可以忽略这个）"></span>
+      </span>
+    </div>
+    <!-- 文章简介 -->
+    <div class="article-content">
+      <div class="markdown-body article-content--inner" v-html="mdToHtml(psg.summary)">
+        <blockquote>
+<p>科学上网（你可以忽略这个），搭建自已的科学上网环境<br>
+      </p></blockquote></div>
+    </div>
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <!-- 分类pc端可见 -->
+        <span class="pc-view">
+          <i class="iconfont icon-tag"></i>分类:
+          
+            <a href="/categories/学习/">
+              学习
+            </a>
+          
+        </span>
+        <span>
+          <i class="iconfont icon-06tags"></i>标签:
+          
+            
+              <span class="span--tag">
+                <a href="/tags/学习/">
+                  #学习
+                </a>
+              </span>
+            
+                    
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+        <span class="pc-view">
+          <i class="iconfont icon-view"></i>浏览: <span class="article-timer" data-identity="科学上网（你可以忽略这个）"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="article-title">
+      <a href="/2017/11/15/那个人藏了多少秘密/">
+        <span>那个人藏了多少秘密</span>
+      </a>
+    </h1>
+    <!-- PC端文章信息 -->
+    <div class="article-top-meta pc-view">
+      <span>
+        发布时间 : 2017-11-15
+      </span>
+    </div>
+    <!-- 移动端文章信息 -->
+    <div class="article-top-meta mobile-view">
+      <span>
+        发布 : 2017-11-15
+      </span>
+      <span>
+        分类 :
+        
+          <a href="/categories/摇摇晃晃/">
+            摇摇晃晃
+          </a>
+        
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="那个人藏了多少秘密"></span>
+      </span>
+    </div>
+    <!-- 文章简介 -->
+    <div class="article-content">
+      <div class="markdown-body article-content--inner" v-html="mdToHtml(psg.summary)">
+        <blockquote>
+<p>那个人藏了多少秘密…<br>
+      </p></blockquote></div>
+    </div>
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <!-- 分类pc端可见 -->
+        <span class="pc-view">
+          <i class="iconfont icon-tag"></i>分类:
+          
+            <a href="/categories/摇摇晃晃/">
+              摇摇晃晃
+            </a>
+          
+        </span>
+        <span>
+          <i class="iconfont icon-06tags"></i>标签:
+          
+            
+              <span class="span--tag">
+                <a href="/tags/摇摇晃晃/">
+                  #摇摇晃晃
+                </a>
+              </span>
+            
+                    
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+        <span class="pc-view">
+          <i class="iconfont icon-view"></i>浏览: <span class="article-timer" data-identity="那个人藏了多少秘密"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="article-title">
+      <a href="/2017/10/20/我爸/">
+        <span>我爸</span>
+      </a>
+    </h1>
+    <!-- PC端文章信息 -->
+    <div class="article-top-meta pc-view">
+      <span>
+        发布时间 : 2017-10-20
+      </span>
+    </div>
+    <!-- 移动端文章信息 -->
+    <div class="article-top-meta mobile-view">
+      <span>
+        发布 : 2017-10-20
+      </span>
+      <span>
+        分类 :
+        
+          <a href="/categories/摇摇晃晃/">
+            摇摇晃晃
+          </a>
+        
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="我爸"></span>
+      </span>
+    </div>
+    <!-- 文章简介 -->
+    <div class="article-content">
+      <div class="markdown-body article-content--inner" v-html="mdToHtml(psg.summary)">
+        <blockquote>
+<p>我通常在这几种情况下会想到他…<br>
+      </p></blockquote></div>
+    </div>
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <!-- 分类pc端可见 -->
+        <span class="pc-view">
+          <i class="iconfont icon-tag"></i>分类:
+          
+            <a href="/categories/摇摇晃晃/">
+              摇摇晃晃
+            </a>
+          
+        </span>
+        <span>
+          <i class="iconfont icon-06tags"></i>标签:
+          
+            
+              <span class="span--tag">
+                <a href="/tags/摇摇晃晃/">
+                  #摇摇晃晃
+                </a>
+              </span>
+            
+                    
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+        <span class="pc-view">
+          <i class="iconfont icon-view"></i>浏览: <span class="article-timer" data-identity="我爸"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="article-title">
+      <a href="/2017/09/01/mac搭建hexo-github博客/">
+        <span>mac搭建hexo+github博客</span>
+      </a>
+    </h1>
+    <!-- PC端文章信息 -->
+    <div class="article-top-meta pc-view">
+      <span>
+        发布时间 : 2017-09-01
+      </span>
+    </div>
+    <!-- 移动端文章信息 -->
+    <div class="article-top-meta mobile-view">
+      <span>
+        发布 : 2017-09-01
+      </span>
+      <span>
+        分类 :
+        
+          <a href="/categories/学习/">
+            学习
+          </a>
+        
+      </span>
+      <span>
+        浏览 : <span class="article-timer" data-identity="mac搭建hexo-github博客"></span>
+      </span>
+    </div>
+    <!-- 文章简介 -->
+    <div class="article-content">
+      <div class="markdown-body article-content--inner" v-html="mdToHtml(psg.summary)">
+        <blockquote>
+<p>mac搭建hexo+github博客环境<br>
+      </p></blockquote></div>
+    </div>
+    <div class="article-footer">
+      <div class="article-meta pull-left">
+        <!-- 分类pc端可见 -->
+        <span class="pc-view">
+          <i class="iconfont icon-tag"></i>分类:
+          
+            <a href="/categories/学习/">
+              学习
+            </a>
+          
+        </span>
+        <span>
+          <i class="iconfont icon-06tags"></i>标签:
+          
+            
+              <span class="span--tag">
+                <a href="/tags/学习/">
+                  #学习
+                </a>
+              </span>
+            
+                    
+        </span>
+      </div>
+      <div class="article-meta pull-right">
+        <span class="pc-view">
+          <i class="iconfont icon-view"></i>浏览: <span class="article-timer" data-identity="mac搭建hexo-github博客"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+
+  <nav class="page-navigation">
+    
+    
+  </nav>
+
+  <script defer>
+const valineAPI = (() => {
+  try {
+    AV.init("1W3exCoRBiBAprj1t5y9jilg-gzGzoHsz", "grefGUqOnQdX9c78Nm3gkKmG");
+  } catch(error) {}
+  const isExist = (identity) => {
+    identity = identity || getRealPath();
+    let query = new AV.Query('Timer');
+    return new Promise((resolve, reject) => {
+      query.equalTo("identity", identity);
+      query.find().then(results => {
+        resolve(results.length > 0);
+      }, error => reject(error));
+    })
+  }
+
+  const _get = (identity) => {
+    let query = null;
+    if(identity && identity instanceof Array){
+      let querys = [];
+      for(let i = 0; i < identity.length; ++i) {
+        querys[i] = new AV.Query('Timer');
+        querys[i].equalTo('identity', identity[i]);
+      }
+      query = AV.Query.or.apply(null ,querys);
+    } else {
+      identity = identity || getRealPath();
+      query = new AV.Query("Timer");
+      query.equalTo("identity", identity);
+    }
+
+    return new Promise((resolve, reject) => {
+      query.find()
+      .then(results => resolve(results))
+      .catch(error => reject(error))
+    })
+  }
+
+  const create = (identity) => {
+    identity = identity || getRealPath();
+    return new Promise((resolve, reject) => {
+      let Todo = AV.Object.extend('Timer');
+      let todo = new Todo();
+      todo.set("times", 1);
+      todo.set("identity", identity);
+      todo.save().then(res => resolve(true), error => reject(error));
+    })
+  }
+
+  const update = (identity) => {
+    identity = identity || getRealPath();
+    return new Promise((resolve, reject) => {
+      let query = new AV.Query('Timer');
+      query.equalTo("identity", identity);
+      query.find().then(todos => {
+        todos.forEach(todo => {
+          todo.set("times", todo.attributes.times + 1);
+        });
+        return AV.Object.saveAll(todos);
+      }).then(todos => resolve(true), error => reject(error));
+    })
+  }
+
+  return {
+    isExist,
+    _get,
+    update,
+    create
+  }
+})()
+
+const calcAndWriteTimes = () => {
+  let isPost = false;
+
+  let timerAllDOM = document.querySelectorAll(".article-timer");
+
+  if(isPost) {
+    let identity = timerAllDOM[0].getAttribute("data-identity");
+    valineAPI.isExist(identity)
+    .then(exist => {
+      if(exist) {
+        return valineAPI.update(identity);
+      }
+      return new Promise(resolve => resolve(true));
+    })
+    .then( succuess => valineAPI._get(identity))
+    .then( result => timerAllDOM[0].innerText = result[0].attributes.times)
+    .catch(error => console.log(error.message))
+    return ;
+  }
+
+  let timerDOMCache = {};
+
+  for(let timerDOM of timerAllDOM) {
+    let identity = timerDOM.getAttribute("data-identity");
+    timerDOMCache[identity] = {
+      dom: timerDOM,
+      times: undefined
+    };
+  }
+
+  let identities = Object.keys(timerDOMCache);
+  valineAPI._get(identities).then(results => {
+    for(let result of results) {
+      let {identity, times} = result.attributes;
+      timerDOMCache[identity].times = times;
+      timerDOMCache[identity].dom.innerText = times;
+    }
+    for(let identity of identities) {
+      if(timerDOMCache[identity].times){
+        continue;
+      }
+      timerDOMCache[identity].dom.innerText = 1;
+      valineAPI.create(identity);
+    }
+  }).catch(error => console.log(error.message))
+}
+
+if(true){
+  calcAndWriteTimes();
+}
+</script>
+</div>
+
+
+      <script>
+  let isMathjaxConfig = false; // 防止重复调用Config，造成性能损耗
+
+  const initMathjaxConfig = () => {
+    if (!window.MathJax) {
+      return;
+    }
+    window.MathJax.Hub.Config({
+      showProcessingMessages: false, //关闭js加载过程信息
+      messageStyle: "none", //不显示信息
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]], //行内公式选择符
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]], //段内公式选择符
+        skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"] //避开某些标签
+      },
+      "HTML-CSS": {
+        availableFonts: ["STIX", "TeX"], //可选字体
+        showMathMenu: false //关闭右击菜单显示
+      }
+    });
+    isMathjaxConfig = true; // 
+  };
+  if (isMathjaxConfig === false) { // 如果：没有配置MathJax
+    initMathjaxConfig();
+  }
+  window.MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('app')]);
+  
+</script>
+<footer>
+  <p class="site-info">
+    博客已萌萌哒运行<span id="time-to-now"></span><span class="my-face">(●'◡'●)ﾉ♥</span>
+<!--
+    #<br>
+    #Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
+    #<br>
+-->
+  </p>
+</footer>
+
+<script>
+const timeToNowDOM = document.querySelector("#time-to-now");
+const startTimestamp = new Date(2018, 2, 10, 23, 58).getTime();
+
+const updateTimeStr = () => {
+  let offset = parseInt(
+      (new Date().getTime() - startTimestamp) / 1000,
+      10
+    ),
+    day = Math.floor(offset / 86400),
+    hour = Math.floor((offset % 86400) / 3600),
+    minute = Math.floor(((offset % 86400) % 3600) / 60),
+    second = Math.floor(((offset % 86400) % 3600) % 60);
+  timeToNowDOM.innerHTML =
+    day + "天" + hour + "小时" + minute + "分钟" + second + "秒";
+  setTimeout(updateTimeStr, 500);
+}
+
+setTimeout(updateTimeStr, 500);
+</script>
+
+
+      <div class="back-to-top hidden">
+  <span>
+    <i class="iconfont icon-60"></i><span></span>%
+  </span>
+</div>
+
+<script>
+const updateIconToTop = percent => {
+  let dom = document.querySelector(".back-to-top span span");
+  dom.innerText = percent;
+  if(percent < 1) {
+    document.querySelector(".back-to-top").className = "back-to-top hidden";
+  } else {
+    document.querySelector(".back-to-top").className = "back-to-top";
+  }
+}
+
+const handleScoll = () => {
+  let isRunning = false;
+  return () => {
+    if (isRunning) return;
+    isRunning = true;
+    window.requestAnimationFrame(timestamp => {
+      let scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop,
+        scrollHeight =
+          document.documentElement.scrollHeight ||
+          document.body.scrollHeight,
+        clientHeight =
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+      isRunning = false;
+      if (scrollTop <= 1) {
+        updateIconToTop(0);
+        return;
+      }
+      if (scrollTop + clientHeight >= scrollHeight) {
+        updateIconToTop(100);
+      } else {
+        updateIconToTop(parseInt(
+          100 * scrollTop / (scrollHeight - clientHeight),
+          10
+        ));
+      }
+    });
+  };
+}
+
+const backToTop = () => {
+  let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop,
+    delay = 10,
+    time = 200;
+  if (scrollTop <= 20) {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    return;
+  }
+  let step = Math.ceil(scrollTop * delay / time);
+  let timer = setInterval(() => {
+    scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop - step <= 0) {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      clearInterval(timer);
+    } else {
+      document.documentElement.scrollTop = scrollTop - step;
+      document.body.scrollTop = scrollTop - step;
+    }
+  }, delay);
+}
+
+document.addEventListener("scroll", handleScoll(), false);
+
+document.querySelector(".back-to-top").addEventListener("click", backToTop, false);
+
+</script>
+
+      <aside id="sidebar">
+        <p id="sidebar-header"></p>
+        <ol id="sidebar-toc"></ol>
+      </aside>
+
+    </div>
+  </body>
+
+</html>
