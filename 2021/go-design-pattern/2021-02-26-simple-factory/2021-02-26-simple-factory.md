@@ -6,8 +6,6 @@ NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一�
 #### 代码实现
 ```
 #api.go
-import "fmt"
-
 //API is interface
 type API interface {
 	Say() string
@@ -28,7 +26,6 @@ func NewAPI(t string) API {
 ```
 ```
 #walk.go
-
 import "fmt"
 
 //walkAPI is one of API implement
@@ -41,7 +38,6 @@ func (*walkAPI) Say(action string) string {
 ```
 ```
 #run.go
-
 import "fmt"
 
 //runAPI is another of API implement
@@ -55,7 +51,6 @@ func (*runAPI) Say() string {
 
 ```
 #api_test.go
-
 import "testing"
 
 //TestType1 test get hiapi with factory
